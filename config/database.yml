@@ -33,4 +33,4 @@ test:
 
 production:
   <<: *default
-  database: elearn_tools_prod
+  database: connect_prod
