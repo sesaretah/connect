@@ -1,6 +1,6 @@
 class UploadSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
-  attributes :link, :uuid, :converted, :converted_link,:uploader
+  attributes :link, :uuid, :converted, :converted_link, :uploader, :pages, :dimensions
 
   def link
     if object.attached_document.attached?
@@ -9,7 +9,7 @@ class UploadSerializer < ActiveModel::Serializer
   end
 
   def uploader
-    object.user.profile.name
+    object.user.profile.name if object.user && object.user.profile
   end
 
   def converted_link

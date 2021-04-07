@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_26_211025) do
+ActiveRecord::Schema.define(version: 2021_02_15_143554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,6 +148,8 @@ ActiveRecord::Schema.define(version: 2020_11_26_211025) do
     t.boolean "converted"
     t.integer "room_id"
     t.integer "user_id"
+    t.integer "pages"
+    t.json "dimensions"
     t.index ["room_id"], name: "index_uploads_on_room_id"
     t.index ["uuid"], name: "index_uploads_on_uuid"
   end
@@ -171,8 +173,10 @@ ActiveRecord::Schema.define(version: 2020_11_26_211025) do
     t.datetime "last_login"
     t.string "uuid"
     t.integer "current_role_id"
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

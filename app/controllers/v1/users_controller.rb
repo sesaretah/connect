@@ -10,8 +10,8 @@ class V1::UsersController < ApplicationController
   #end
 
   def login
-    user = User.find_by_email(params["email"])
-    user.notify_user if user
+    user = User.find_by_email(params[:user][:email])
+    #user.notify_user if user
     if !user.blank?
       render :json => { data: { result: "OK", token: JWTWrapper.encode({ user_id: user.id }), user_id: user.id }, klass: "Login" }.to_json, :callback => params["callback"]
     else
@@ -29,9 +29,16 @@ class V1::UsersController < ApplicationController
   end
 
   def sign_up
-    user = User.create(email: params["email"], password: params["password"], password_confirmation: params["password"], last_login: DateTime.now)
+    #    params.permit!
+    #    if !params["username"].blank?
+    #      username = params["username"]
+    #    else
+    #      username = SecureRandom.hex(10)
+    #    end
+    #    password = SecureRandom.hex(10)
+    user = User.create(email: params[:user][:email], password: params[:user][:password], password_confirmation: params[:user][:password], last_login: DateTime.now)
     if !user.blank?
-      Profile.create(name: params["nickname"], user_id: user.id)
+      Profile.create(name: params["name"], user_id: user.id)
       #user.notify_user
     end
     if !user.blank?
@@ -57,7 +64,7 @@ class V1::UsersController < ApplicationController
 
   def validate_token
     if !current_user.blank?
-      render :json => { data: { result: "OK", token: JWTWrapper.encode({ user_id: current_user.id }), user_id: current_user.id }, klass: "Validate" }.to_json, :callback => params["callback"]
+      render :json => { data: { result: "OK", name: current_user.profile.name, uuid: current_user.uuid }, klass: "Validate" }.to_json, :callback => params["callback"]
     else
       render json: { data: [], klass: "Error" }, status: :ok
     end
