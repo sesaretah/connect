@@ -161,10 +161,11 @@ clientLocal.ontrack = (track, stream) => {
       
       videoDiv = document.createElement("div")
       videoDiv.id = stream.id
-      videoDiv.style = 'width: 600px; overflow: hidden;'
+      videoDiv.style = 'width: 50%; overflow: hidden;'
       remotesDiv.appendChild(videoDiv);
       videoDiv.appendChild(remoteVideo);
-
+      //remotesDiv.appendChild(remoteVideo);
+      
       // Save the stream and video element in the map.
       streams[stream.id] = { stream, videoElement: remoteVideo };
 
