@@ -42,6 +42,8 @@ Rails.application.routes.draw do
     get "/uploads", to: "uploads#index"
     get "/uploads/recent/:id", to: "uploads#recent"
 
+    get "/rooms/last/:id", to: "rooms#last"
+
     resources :profiles
     resources :channels
     resources :posts

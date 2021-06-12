@@ -1,6 +1,6 @@
 class RoomSerializer < ActiveModel::Serializer
   attributes :id, :title, :is_private, :room_id, :pin, :user_uuid, :user_fullname,
-             :is_owner
+             :is_owner, :is_admin
 
   def room_id
     object.uuid.to_i
@@ -26,6 +26,14 @@ class RoomSerializer < ActiveModel::Serializer
 
   def is_owner
     if scope && scope[:user_id] && object.user_id == scope[:user_id]
+      true
+    else
+      false
+    end
+  end
+
+  def is_admin
+    if scope && scope[:user_id] && !object.moderator_ids.blank? && object.moderator_ids.include?(scope[:user_id].to_i)
       true
     else
       false

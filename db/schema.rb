@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_15_143554) do
+ActiveRecord::Schema.define(version: 2021_06_12_142937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_143554) do
     t.string "secret"
     t.string "pin"
     t.boolean "activated"
+    t.json "moderator_ids"
     t.index ["user_id"], name: "index_rooms_on_user_id"
     t.index ["uuid"], name: "index_rooms_on_uuid"
   end
