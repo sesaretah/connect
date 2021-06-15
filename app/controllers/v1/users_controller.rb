@@ -10,7 +10,11 @@ class V1::UsersController < ApplicationController
   #end
 
   def login
-    user = User.find_by_email(params[:user][:email])
+    if User.is_email_valid?(params[:user][:email])
+      user = User.find_by_email(params[:user][:email])
+    else
+      user = User.find_by_username(params[:user][:email])
+    end
     #user.notify_user if user
     if !user.blank?
       render :json => { data: { result: "OK", token: JWTWrapper.encode({ user_id: user.id }), user_id: user.id }, klass: "Login" }.to_json, :callback => params["callback"]

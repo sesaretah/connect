@@ -90,4 +90,18 @@ class User < ApplicationRecord
   def self.verify(code)
     user = self.where("last_code = ? AND last_code_datetime > ?", code, 10.minutes.ago).first
   end
+
+  def self.mass_import
+    require "csv"
+    csv_text = File.read("#{Rails.root}/public/users.csv")
+    csv = CSV.parse(csv_text, :headers => true)
+    csv.each do |row|
+      user = User.create(email: "#{row[3]}@test.com", password: row[3], password_confirmation: row[3], last_login: DateTime.now, username: row[3])
+      Profile.create(name: "#{row[1]} #{row[2]}", user_id: user.id, office: "#{row[0]}")
+    end
+  end
+
+  def self.is_email_valid?(email)
+    email =~ /^(.+)@(.+)$/
+  end
 end
