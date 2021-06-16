@@ -113,7 +113,8 @@
           event.preventDefault();
           player.src({
             src: url.value,
-            type: 'application/x-mpegURL'
+            type: 'application/x-mpegURL',
+            liveui: true,
           });
           return false;
         });
