@@ -105,7 +105,7 @@
     <script>
       (function(window, videojs) {
         var player = window.player = videojs('example-video');
-
+          player.seekToLiveEdge();
         // hook up the video switcher
         var loadUrl = document.getElementById('load-url');
         var url = document.getElementById('url');
@@ -114,7 +114,6 @@
           player.src({
             src: url.value,
             type: 'application/x-mpegURL',
-            liveui: true,
           });
           return false;
         });
