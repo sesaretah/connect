@@ -9,19 +9,21 @@
     />
 
     <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
 
     <style>
       #remotes video {
         width: 100%;
       }
       body {
-          background-color: black;
+        background-color: black;
+      }
+      .h-450 {
+        height: 450px;
+        min-height: 450px;
+      }
+      .p-0 {
+        padding: 0px !important;
       }
     </style>
 
@@ -29,13 +31,27 @@
   </head>
 
   <body>
-    <div class=" pt-1">
-      <div class="row">
-      
-        <div id="remotes" class="col-12 pt-2">
+
+    <div class="container-fluid">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-lg-12 ">
+          <div id='remotes' class="row">
+            <div id="v1" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v2" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v3" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v4" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v5" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v6" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v7" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v8" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v9" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+          </div>
         </div>
       </div>
-    </div>
+
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -55,152 +71,193 @@
     ></script>
     <script src="https://unpkg.com/ion-sdk-js@1.5.5/dist/ion-sdk.min.js"></script>
     <script src="https://unpkg.com/ion-sdk-js@1.5.5/dist/json-rpc.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js'></script>
+    <script src="socket.io.min.js"></script>
     <script>
-        function getUrlVars()
+      const socket = io("http://localhost:8081");
+      socket.on("connect", () => {
+        
+      });
 
-{
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-console.log(getUrlVars()["display"])
+
+
+      
     </script>
     <script>
-const localVideo = document.getElementById("local-video");
-const remotesDiv = document.getElementById("remotes");
+      function getUrlVars() {
+        var vars = [],
+          hash;
+        var hashes = window.location.href
+          .slice(window.location.href.indexOf("?") + 1)
+          .split("&");
+        for (var i = 0; i < hashes.length; i++) {
+          hash = hashes[i].split("=");
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+        }
+        return vars;
+      }
+      console.log(getUrlVars()["display"]);
+    </script>
+    <script>
+      const localVideo = document.getElementById("local-video");
+      const remotesDiv = document.getElementById("remotes");
 
-const serverUrl = "wss://kaarafarinan.ir:7000/ws";
+      const serverUrl = "wss://kaarafarinan.ir:7000/ws";
 
-/* eslint-env browser */
-const joinBtns = document.getElementById("start-btns");
+      /* eslint-env browser */
+      const joinBtns = document.getElementById("start-btns");
 
-const config = {
-  iceServers: [
-    {
-      urls: "stun:stun.l.google.com:19302",
-    },
-  ],
-};
+      var placedVideos = {}
 
-const signalLocal = new Signal.IonSFUJSONRPCSignal(serverUrl);
-
-const clientLocal = new IonSDK.Client(signalLocal, config);
-signalLocal.onopen = () => clientLocal.join("room"+getUrlVars()["display"]);
-
-/**
- * For every remote stream this object will hold the follwing information:
- * {
- *  "id-of-the-remote-stream": {
- *     stream: [Object], // Reference to the stream object
- *     videoElement: [Object] // Reference to the video element that's rendering the stream.
- *   }
- * }
- */
-const streams = {};
-
-/**
- * When we click the Enable Audio button this function gets called, and
- * unmutes all the remote videos that might be there and also any future ones.
- * This little party trick is according to
- * https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide.
- */
-let remoteVideoIsMuted = true;
-function enableAudio() {
-  if (remoteVideoIsMuted) {
-    // Unmute all the current videoElements.
-    for (const streamInfo of Object.values(streams)) {
-      let { videoElement } = streamInfo;
-      videoElement.pause();
-      videoElement.muted = false;
-      videoElement.play();
-    }
-    // Set remoteVideoIsMuted to false so that all future autoplays
-    // work.
-    remoteVideoIsMuted = false;
-
-    const button = document.getElementById("enable-audio-button");
-    button.remove();
-  }
-}
-
-let localStream;
-const start = () => {
-  IonSDK.LocalStream.getUserMedia({
-    resolution: "vga",
-    audio: true,
-  })
-    .then((media) => {
-      localStream = media;
-      localVideo.srcObject = media;
-      localVideo.autoplay = true;
-      localVideo.controls = true;
-      localVideo.muted = true;
-      joinBtns.style.display = "none";
-      clientLocal.publish(media);
-    })
-    .catch(console.error);
-};
-
-clientLocal.ontrack = (track, stream) => {
-  console.log("got track", track.id, "for stream", stream.id);
-  track.onunmute = () => {
-    // If the stream is not there in the streams map.
-    if (!streams[stream.id]) {
-      // Create a video element for rendering the stream
-      remoteVideo = document.createElement("video");
-      remoteVideo.srcObject = stream;
-      remoteVideo.autoplay = true;
-      remoteVideo.width = '400';
-      remoteVideo.muted = remoteVideoIsMuted;
-      
-      videoDiv = document.createElement("div")
-      videoDiv.id = stream.id
-      videoDiv.style = 'width: 50%; overflow: hidden;'
-      remotesDiv.appendChild(videoDiv);
-      videoDiv.appendChild(remoteVideo);
-      //remotesDiv.appendChild(remoteVideo);
-      
-      // Save the stream and video element in the map.
-      streams[stream.id] = { stream, videoElement: remoteVideo };
-
-      // When this stream removes a track, assume
-      // that its going away and remove it.
-      stream.onremovetrack = () => {
-        try {
-          if (streams[stream.id]) {
-            const { videoElement } = streams[stream.id];
-            var videoDiv = document.getElementById(stream.id);
-            remotesDiv.removeChild(videoDiv);
-            delete streams[stream.id];
-          }
-        } catch (err) {}
+      const config = {
+        iceServers: [
+          {
+            urls: "stun:stun.l.google.com:19302",
+          },
+        ],
       };
-    }
-  };
-};
 
-const controlLocalVideo = (radio) => {
-  if (radio.value === "false") {
-    localStream.mute("video");
-  } else {
-    localStream.unmute("video");
-  }
-};
+      const signalLocal = new Signal.IonSFUJSONRPCSignal(serverUrl);
 
-const controlLocalAudio = (radio) => {
-  if (radio.value === "false") {
-    localStream.mute("audio");
-  } else {
-    localStream.unmute("audio");
-  }
-};
+      const clientLocal = new IonSDK.Client(signalLocal, config);
+      signalLocal.onopen = () =>
+        clientLocal.join("room" + getUrlVars()["display"]);
 
+      /**
+       * For every remote stream this object will hold the follwing information:
+       * {
+       *  "id-of-the-remote-stream": {
+       *     stream: [Object], // Reference to the stream object
+       *     videoElement: [Object] // Reference to the video element that's rendering the stream.
+       *   }
+       * }
+       */
+      const streams = {};
+
+      /**
+       * When we click the Enable Audio button this function gets called, and
+       * unmutes all the remote videos that might be there and also any future ones.
+       * This little party trick is according to
+       * https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide.
+       */
+      let remoteVideoIsMuted = true;
+      function enableAudio() {
+        if (remoteVideoIsMuted) {
+          // Unmute all the current videoElements.
+          for (const streamInfo of Object.values(streams)) {
+            let { videoElement } = streamInfo;
+            videoElement.pause();
+            videoElement.muted = false;
+            videoElement.play();
+          }
+          // Set remoteVideoIsMuted to false so that all future autoplays
+          // work.
+          remoteVideoIsMuted = false;
+
+          const button = document.getElementById("enable-audio-button");
+          button.remove();
+        }
+      }
+
+      let localStream;
+      const start = () => {
+        IonSDK.LocalStream.getUserMedia({
+          resolution: "vga",
+          audio: true,
+        })
+          .then((media) => {
+            localStream = media;
+            localVideo.srcObject = media;
+            localVideo.autoplay = true;
+            localVideo.controls = true;
+            localVideo.muted = true;
+            joinBtns.style.display = "none";
+            clientLocal.publish(media);
+          })
+          .catch(console.error);
+      };
+
+      clientLocal.ontrack = (track, stream) => {
+
+        console.log("got track", track, "for stream", stream);
+        track.onunmute = () => {
+          // If the stream is not there in the streams map.
+          if (!streams[stream.id]) {
+            // Create a video element for rendering the stream
+            //remoteVideo = document.createElement("video");
+            //remoteVideo.srcObject = stream;
+            //remoteVideo.autoplay = true;
+            //remoteVideo.width = "800";
+            //remoteVideo.id = stream.id;
+            //remoteVideo.muted = remoteVideoIsMuted;
+
+            videoDiv = document.createElement("div");
+            //videoDiv.id = stream.id;
+            videoDiv.style = "width: 50%; overflow: hidden;";
+            //remotesDiv.appendChild(videoDiv);
+            //videoDiv.appendChild(remoteVideo);
+            streams[stream.id] = stream
+            socket.emit('ionGetSlot', {stream: stream.id})
+            socket.on("ionSlot", (m) => {
+              if(!document.getElementById(m['stream'])) {
+              var stream = streams[m['stream']]
+              remoteVideo = document.createElement("video");
+              remoteVideo.srcObject = stream;
+              remoteVideo.autoplay = true;
+              remoteVideo.width = "800";
+              remoteVideo.id = stream.id;
+              remoteVideo.muted = remoteVideoIsMuted;
+              $('#v'+m['slot'][1]).append(remoteVideo)
+              placedVideos[stream.id] = m['slot'][1]
+              //streams[stream.id] = { stream, videoElement: remoteVideo };
+              }
+            });
+            //remotesDiv.appendChild(remoteVideo);
+
+            // Save the stream and video element in the map.
+            
+
+            // When this stream removes a track, assume
+            // that its going away and remove it.
+            stream.onremovetrack = () => {
+              console.log('Stream is gone ...')
+              try {
+                if (streams[stream.id]) {
+                  //const { videoElement } = streams[stream.id];
+                 //var videoDiv = document.getElementById(stream.id);
+                  //remotesDiv.removeChild(videoDiv);
+                  delete streams[stream.id];
+                  console.log(stream.id)
+                  var v = placedVideos[stream.id]
+                  console.log(v, placedVideos, stream.id )
+                  var videoEl = document.getElementById(stream.id);
+                  var videoDiv = document.getElementById('v'+v);
+                  videoDiv.removeChild(videoEl)
+                  socket.emit('ionRelSlot', {stream: stream.id})
+                }
+              } catch (err) {}
+            };
+          }
+        };
+      };
+
+      const controlLocalVideo = (radio) => {
+        if (radio.value === "false") {
+          localStream.mute("video");
+        } else {
+          localStream.unmute("video");
+        }
+      };
+
+      const controlLocalAudio = (radio) => {
+        if (radio.value === "false") {
+          localStream.mute("audio");
+        } else {
+          localStream.unmute("audio");
+        }
+      };
     </script>
+    
   </body>
 </html>
