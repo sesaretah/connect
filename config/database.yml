@@ -33,4 +33,5 @@ test:
 
 production:
   <<: *default
-  database: connect_prod
+  database: connect_main
+  #database: connect_prod
