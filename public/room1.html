@@ -19,8 +19,8 @@
         background-color: black;
       }
       .h-450 {
-        height: 450px;
-        min-height: 450px;
+        height: 240px;
+        min-height: 240px;
       }
       .p-0 {
         padding: 0px !important;
@@ -117,116 +117,109 @@
           },
         ],
       };
-
-      const signalLocal = new Signal.IonSFUJSONRPCSignal(serverUrl);
-
-      const clientLocal = new IonSDK.Client(signalLocal, config);
-      signalLocal.onopen = () =>
-        clientLocal.join("room23");
-
-      /**
-       * For every remote stream this object will hold the follwing information:
-       * {
-       *  "id-of-the-remote-stream": {
-       *     stream: [Object], // Reference to the stream object
-       *     videoElement: [Object] // Reference to the video element that's rendering the stream.
-       *   }
-       * }
-       */
       const streams = {};
 
-      /**
-       * When we click the Enable Audio button this function gets called, and
-       * unmutes all the remote videos that might be there and also any future ones.
-       * This little party trick is according to
-       * https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide.
-       */
-      let remoteVideoIsMuted = true;
-      function enableAudio() {
-        if (remoteVideoIsMuted) {
-          // Unmute all the current videoElements.
-          for (const streamInfo of Object.values(streams)) {
-            let { videoElement } = streamInfo;
-            videoElement.pause();
-            videoElement.muted = false;
-            videoElement.play();
-          }
-          // Set remoteVideoIsMuted to false so that all future autoplays
-          // work.
-          remoteVideoIsMuted = false;
 
-          const button = document.getElementById("enable-audio-button");
-          button.remove();
-        }
-      }
-
-      let localStream;
-      const start = () => {
-        IonSDK.LocalStream.getUserMedia({
-          resolution: "vga",
-          audio: true,
-        })
-          .then((media) => {
-            localStream = media;
-            localVideo.srcObject = media;
-            localVideo.autoplay = true;
-            localVideo.controls = true;
-            localVideo.muted = true;
-            joinBtns.style.display = "none";
-            clientLocal.publish(media);
-          })
-          .catch(console.error);
+      const signalLocal = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal = new IonSDK.Client(signalLocal, config);
+      signalLocal.onopen = () =>
+      clientLocal.join("room"+getUrlVars()["display"]+"1");
+      clientLocal.ontrack = (track, stream) => {
+        handleTrack(track, stream)
       };
 
-      clientLocal.ontrack = (track, stream) => {
 
-        console.log("got track", track.id, "for stream", stream.id, 'for room 23');
+      const signalLocal2 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal2 = new IonSDK.Client(signalLocal2, config);
+      signalLocal2.onopen = () =>
+      clientLocal2.join("room"+getUrlVars()["display"]+"2");
+      clientLocal2.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal3 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal3 = new IonSDK.Client(signalLocal3, config);
+      signalLocal3.onopen = () =>
+      clientLocal3.join("room"+getUrlVars()["display"]+"3");
+      clientLocal3.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal4 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal4 = new IonSDK.Client(signalLocal4, config);
+      signalLocal4.onopen = () =>
+      clientLocal4.join("room"+getUrlVars()["display"]+"4");
+      clientLocal4.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal5 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal5 = new IonSDK.Client(signalLocal5, config);
+      signalLocal5.onopen = () =>
+      clientLocal5.join("room"+getUrlVars()["display"]+"5");
+      clientLocal5.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal6 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal6 = new IonSDK.Client(signalLocal6, config);
+      signalLocal6.onopen = () =>
+      clientLocal6.join("room"+getUrlVars()["display"]+"3");
+      clientLocal6.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal7 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal7 = new IonSDK.Client(signalLocal7, config);
+      signalLocal7.onopen = () =>
+      clientLocal7.join("room"+getUrlVars()["display"]+"7");
+      clientLocal7.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal8 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal8 = new IonSDK.Client(signalLocal8, config);
+      signalLocal8.onopen = () =>
+      clientLocal8.join("room"+getUrlVars()["display"]+"8");
+      clientLocal8.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal9 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal9 = new IonSDK.Client(signalLocal9, config);
+      signalLocal9.onopen = () =>
+      clientLocal9.join("room"+getUrlVars()["display"]+"9");
+      clientLocal9.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+
+      function handleTrack(track, stream) {
+        if(track && stream) {
+          console.log("got track", track.id, "for stream", stream.id);
         track.onunmute = () => {
-          // If the stream is not there in the streams map.
           if (!streams[stream.id]) {
-            // Create a video element for rendering the stream
-            //remoteVideo = document.createElement("video");
-            //remoteVideo.srcObject = stream;
-            //remoteVideo.autoplay = true;
-            //remoteVideo.width = "800";
-            //remoteVideo.id = stream.id;
-            //remoteVideo.muted = remoteVideoIsMuted;
-
-            videoDiv = document.createElement("div");
-            //videoDiv.id = stream.id;
-            videoDiv.style = "width: 50%; overflow: hidden;";
-            //remotesDiv.appendChild(videoDiv);
-            //videoDiv.appendChild(remoteVideo);
             streams[stream.id] = stream
             socket.emit('ionGetSlot', {stream: stream.id})
             socket.on("ionSlot", (m) => {
               if(!document.getElementById(m['stream'])) {
-              var stream = streams[m['stream']]
-              remoteVideo = document.createElement("video");
-              remoteVideo.srcObject = stream;
-              remoteVideo.autoplay = true;
-              remoteVideo.width = "800";
-              remoteVideo.id = stream.id;
-              remoteVideo.muted = remoteVideoIsMuted;
-              $('#v'+m['slot'][1]).append(remoteVideo)
-              placedVideos[stream.id] = m['slot'][1]
-              //streams[stream.id] = { stream, videoElement: remoteVideo };
+                var stream = streams[m['stream']]
+                remoteVideo = document.createElement("video");
+                remoteVideo.srcObject = stream;
+                remoteVideo.autoplay = true;
+                remoteVideo.width = "750";
+                remoteVideo.id = stream.id;
+                remoteVideo.muted = true;
+                $('#v'+m['slot'][1]).append(remoteVideo)
+                placedVideos[stream.id] = m['slot'][1]
               }
             });
-            //remotesDiv.appendChild(remoteVideo);
 
-            // Save the stream and video element in the map.
-            
-
-            // When this stream removes a track, assume
-            // that its going away and remove it.
             stream.onremovetrack = () => {
               console.log('Stream is gone ...')
               try {
                 if (streams[stream.id]) {
-                  //const { videoElement } = streams[stream.id];
-                 //var videoDiv = document.getElementById(stream.id);
-                  //remotesDiv.removeChild(videoDiv);
+
                   delete streams[stream.id];
                   console.log(stream.id)
                   var v = placedVideos[stream.id]
@@ -240,126 +233,17 @@
             };
           }
         };
-      };
+      }
+      }
 
-      const controlLocalVideo = (radio) => {
-        if (radio.value === "false") {
-          localStream.mute("video");
-        } else {
-          localStream.unmute("video");
-        }
-      };
 
-      const controlLocalAudio = (radio) => {
-        if (radio.value === "false") {
-          localStream.mute("audio");
-        } else {
-          localStream.unmute("audio");
-        }
-      };
+
+
     </script>
 
 
 
-<script>
 
-
-
-
-  var placedVideos2 = {}
-
-  const signalLocal2 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-
-  const clientLocal2 = new IonSDK.Client(signalLocal2, config);
-  signalLocal2.onopen = () =>
-    clientLocal2.join("room29");
-
-  /**
-   * For every remote stream this object will hold the follwing information:
-   * {
-   *  "id-of-the-remote-stream": {
-   *     stream: [Object], // Reference to the stream object
-   *     videoElement: [Object] // Reference to the video element that's rendering the stream.
-   *   }
-   * }
-   */
-  const streams2 = {};
-
-  /**
-   * When we click the Enable Audio button this function gets called, and
-   * unmutes all the remote videos that might be there and also any future ones.
-   * This little party trick is according to
-   * https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide.
-   */
-
-
-
-  clientLocal2.ontrack = (track, stream) => {
-
-    console.log("got track", track.id, "for stream", stream.id, 'for room 29');
-    track.onunmute = () => {
-      // If the stream is not there in the streams map.
-      if (!streams[stream.id]) {
-        // Create a video element for rendering the stream
-        //remoteVideo = document.createElement("video");
-        //remoteVideo.srcObject = stream;
-        //remoteVideo.autoplay = true;
-        //remoteVideo.width = "800";
-        //remoteVideo.id = stream.id;
-        //remoteVideo.muted = remoteVideoIsMuted;
-
-        videoDiv = document.createElement("div");
-        //videoDiv.id = stream.id;
-        videoDiv.style = "width: 50%; overflow: hidden;";
-        //remotesDiv.appendChild(videoDiv);
-        //videoDiv.appendChild(remoteVideo);
-        streams[stream.id] = stream
-        socket.emit('ionGetSlot', {stream: stream.id})
-        socket.on("ionSlot", (m) => {
-          if(!document.getElementById(m['stream'])) {
-          var stream = streams[m['stream']]
-          remoteVideo = document.createElement("video");
-          remoteVideo.srcObject = stream;
-          remoteVideo.autoplay = true;
-          remoteVideo.width = "800";
-          remoteVideo.id = stream.id;
-          remoteVideo.muted = remoteVideoIsMuted;
-          $('#v'+m['slot'][1]).append(remoteVideo)
-          placedVideos[stream.id] = m['slot'][1]
-          //streams[stream.id] = { stream, videoElement: remoteVideo };
-          }
-        });
-        //remotesDiv.appendChild(remoteVideo);
-
-        // Save the stream and video element in the map.
-        
-
-        // When this stream removes a track, assume
-        // that its going away and remove it.
-        stream.onremovetrack = () => {
-          console.log('Stream is gone ...')
-          try {
-            if (streams[stream.id]) {
-              //const { videoElement } = streams[stream.id];
-             //var videoDiv = document.getElementById(stream.id);
-              //remotesDiv.removeChild(videoDiv);
-              delete streams[stream.id];
-              console.log(stream.id)
-              var v = placedVideos[stream.id]
-              console.log(v, placedVideos, stream.id )
-              var videoEl = document.getElementById(stream.id);
-              var videoDiv = document.getElementById('v'+v);
-              videoDiv.removeChild(videoEl)
-              socket.emit('ionRelSlot', {stream: stream.id})
-            }
-          } catch (err) {}
-        };
-      }
-    };
-  };
-
-
-</script>
     
   </body>
 </html>
