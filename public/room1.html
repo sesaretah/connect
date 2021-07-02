@@ -75,11 +75,10 @@
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js'></script>
     <script src="socket.io.min.js"></script>
     <script>
-     /* const socket = io("http://localhost:8081");
-      socket.on("connect", () => {
-        
-      });*/
+      //const socket = io("http://localhost:8081");
+      //socket.on("connect", () => {});
 
+      
       const socket = io.connect("https://connect.ut.ac.ir/", 
     { transports: ['websocket'],
     secure:true,
@@ -207,7 +206,7 @@
 
       function handleTrack(track, stream) {
         if(track && stream) {
-          console.log("got track", track.id, "for stream", stream.id);
+        console.log("got track", track.id, "for stream", stream.id);
         track.onunmute = () => {
           if (!streams[stream.id]) {
             streams[stream.id] = stream
