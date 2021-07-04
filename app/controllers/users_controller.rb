@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def service
-    response = open("https://auth.ut.ac.ir:8443/cas/p3/serviceValidate?service=https%3A%2F%2Fsn.ut.ac.ir%2Fusers%2Fservice&ticket=" + params[:ticket], { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }).read
+    response = open("https://auth.ut.ac.ir:8443/cas/p3/serviceValidate?service=https%3A%2F%2Fconnect.ut.ac.ir%2Fusers%2Fservice&ticket=" + params[:ticket], { ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE }).read
     result = Hash.from_xml(response.gsub("\n", ""))
     Rails.logger.info result
     if !result["serviceResponse"]["authenticationSuccess"].blank?
