@@ -12,7 +12,7 @@ class UsersController < ApplicationController
         Profile.create(name: utid, user_id: user.id)
       end
       #redirect_to("https://sn.ut.ac.ir/app.html?rnd=#{SecureRandom.hex(10)}/#!/login_jwt/"+JWTWrapper.encode({ user_id: user.id }))
-      redirect_to("https://connect.ut.ac.ir/#!/" + JWTWrapper.encode({ user_id: user.id }))
+      redirect_to("https://connect.ut.ac.ir/#!/?token=" + JWTWrapper.encode({ user_id: user.id }))
     else
       redirect_to("https://connect.ut.ac.ir/#!/login_error/")
       #redirect_to("https://sn.ut.ac.ir/app.html?rnd=#{SecureRandom.hex(10)}/#!/login_error/")
