@@ -75,8 +75,8 @@
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js'></script>
     <script src="socket.io.min.js"></script>
     <script>
-     // const socket = io("http://localhost:8081");
-     // socket.on("connect", () => {});
+      //const socket = io("http://localhost:8081");
+      // socket.on("connect", () => {});
 
     
       const socket = io.connect("https://connect.ut.ac.ir/", 
@@ -122,10 +122,14 @@
 
       const config = {
         iceServers: [
+          {url: "stun:stun.l.google.com:19302"},
           {
-            urls: "stun:stun.l.google.com:19302",
-          },
-        ],
+            url: "turn:sync.ut.ac.ir:3478",
+            credential: 'ion',
+            username: 'pion'
+        
+          }
+        ]
       };
       const streams = {};
 
