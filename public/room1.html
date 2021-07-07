@@ -178,7 +178,7 @@
       const signalLocal6 = new Signal.IonSFUJSONRPCSignal(serverUrl);
       const clientLocal6 = new IonSDK.Client(signalLocal6, config);
       signalLocal6.onopen = () =>
-      clientLocal6.join("room"+getUrlVars()["display"]+"3");
+      clientLocal6.join("room"+getUrlVars()["display"]+"6");
       clientLocal6.ontrack = (track, stream) => {
         handleTrack(track, stream)
       };
