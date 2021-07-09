@@ -28,10 +28,10 @@
       }
     </style>
 
-    <title>Share1</title>
+    <title>Pion ion-sfu | Pubsubtest</title>
   </head>
 
-  <body >
+  <body>
 
     <div class="container-fluid">
 
@@ -39,15 +39,12 @@
 
         <div class="col-xs-12 col-lg-12 ">
           <div id='remotes' class="row">
-            <div id="v1" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v2" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v3" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v4" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v5" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v6" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v7" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v8" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v9" class="col-xs-3 col-lg-3 h-450 p-0"></div>
+            <div id="v1" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v2" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v3" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v4" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v5" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v6" class="col-xs-4 col-lg-4 h-450 p-0"></div>
           </div>
         </div>
       </div>
@@ -75,14 +72,10 @@
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js'></script>
     <script src="socket.io.min.js"></script>
     <script>
-      $( document ).ready(function() {
-      //  lateStart();
-});
+      //const socket = io("http://localhost:8081");
+      // socket.on("connect", () => {});
 
-      const socket = io("http://localhost:8081");
-      socket.on("connect", () => {});
-
-    /*
+    
       const socket = io.connect("https://connect.ut.ac.ir/", 
     { transports: ['websocket'],
     secure:true,
@@ -91,7 +84,7 @@
     )
       socket.on("connect", () => {
         
-      });*/
+      });
 
 
 
@@ -138,101 +131,55 @@
       const streams = {};
 
 
-      const signalLocal0 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal0 = new IonSDK.Client(signalLocal0, config);
-      signalLocal0.onopen = () =>
-      clientLocal0.join("screen room");
-      clientLocal0.ontrack = (track, stream) => {
-        handleTrack(track, stream)
-      };
-
-      function lateStart(){
-        setTimeout(
-    function() {
-      screenStart()
-    }
-    .bind(this),
-    7000
-);
-      }
-
-      function screenStart() {
-  var self = this;
-  IonSDK.LocalStream.getDisplayMedia({
-    resolution: "vga",
-    frameRate: 15,
-    audio: false,
-  })
-    .then((media) => {
-      console.log(media);
-      //this.setState({ screenMedia: media, screenActive: true });
-      var localVideo = document.createElement("video");
-      localVideo.srcObject = media;
-      localVideo.autoplay = true;
-      localVideo.muted = true;
-      localVideo.width = '320';
-      clientLocal.publish(media);
-      handleTrack(media.getVideoTracks()[0], media)
-      media.getVideoTracks()[0].onended = function () {
-        //self.screenUnPublish();
-      };
-      
-    })
-    .catch(console.error);
-}
-
-
-
-      const signalLocal21 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal21 = new IonSDK.Client(signalLocal21, config);
-      signalLocal21.onopen = () =>
-      clientLocal21.join("room21");
-      clientLocal21.ontrack = (track, stream) => {
-        handleTrack(track, stream)
-      };
-
-      const signalLocal22 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal22 = new IonSDK.Client(signalLocal22, config);
-      signalLocal22.onopen = () =>
-      clientLocal22.join("room22");
-      clientLocal22.ontrack = (track, stream) => {
-        handleTrack(track, stream)
-      };
-
-      const signalLocal23 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal23 = new IonSDK.Client(signalLocal23, config);
-      signalLocal23.onopen = () =>
-      clientLocal23.join("room23");
-      clientLocal23.ontrack = (track, stream) => {
-        handleTrack(track, stream)
-      };
-
-      const signalLocal24 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal24 = new IonSDK.Client(signalLocal24, config);
-      signalLocal24.onopen = () =>
-      clientLocal24.join("room24");
-      clientLocal24.ontrack = (track, stream) => {
-        handleTrack(track, stream)
-      };
-
-      const signalLocal25 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal25 = new IonSDK.Client(signalLocal25, config);
-      signalLocal25.onopen = () =>
-      clientLocal25.join("room25");
-      clientLocal25.ontrack = (track, stream) => {
-        handleTrack(track, stream)
-      };
-
-      const signalLocal26 = new Signal.IonSFUJSONRPCSignal(serverUrl);
-      const clientLocal26 = new IonSDK.Client(signalLocal26, config);
-      signalLocal26.onopen = () =>
-      clientLocal26.join("room29");
-      clientLocal26.ontrack = (track, stream) => {
+      const signalLocal = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal = new IonSDK.Client(signalLocal, config);
+      signalLocal.onopen = () =>
+      clientLocal.join("room"+getUrlVars()["display"]+"1");
+      clientLocal.ontrack = (track, stream) => {
         handleTrack(track, stream)
       };
 
 
-      
+      const signalLocal2 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal2 = new IonSDK.Client(signalLocal2, config);
+      signalLocal2.onopen = () =>
+      clientLocal2.join("room"+getUrlVars()["display"]+"2");
+      clientLocal2.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal3 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal3 = new IonSDK.Client(signalLocal3, config);
+      signalLocal3.onopen = () =>
+      clientLocal3.join("room"+getUrlVars()["display"]+"3");
+      clientLocal3.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal4 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal4 = new IonSDK.Client(signalLocal4, config);
+      signalLocal4.onopen = () =>
+      clientLocal4.join("room"+getUrlVars()["display"]+"4");
+      clientLocal4.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal5 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal5 = new IonSDK.Client(signalLocal5, config);
+      signalLocal5.onopen = () =>
+      clientLocal5.join("room"+getUrlVars()["display"]+"5");
+      clientLocal5.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      const signalLocal6 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal6 = new IonSDK.Client(signalLocal6, config);
+      signalLocal6.onopen = () =>
+      clientLocal6.join("room"+getUrlVars()["display"]+"6");
+      clientLocal6.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
 
       function handleTrack(track, stream) {
         if(track && stream) {
@@ -247,7 +194,6 @@
                 console.log('slot', m)
                 var stream = streams[m['stream']]
                 remoteVideo = document.createElement("video");
-                //div = document.createElement("<div id='d"+stream.id+"' class='col-xs-3 col-lg-3 h-450 p-0'></div>")
                 remoteVideo.srcObject = stream;
                 remoteVideo.autoplay = true;
                 remoteVideo.width = "750";
