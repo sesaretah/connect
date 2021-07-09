@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+    <style>
+      #remotes video {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        background-color: black;
+      }
+      .h-450 {
+        height: 240px;
+        min-height: 240px;
+      }
+      .p-0 {
+        padding: 0px !important;
+      }
+    </style>
+
+    <title>Share1</title>
+  </head>
+
+  <body onload="lateStart()">
+
+    <div class="container-fluid">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-lg-12 ">
+          <button id='share' onclick="screenStart()">share</button>
+          <div id='remotes' class="row">
+            <div id="v1" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v2" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v3" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v4" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v5" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v6" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v7" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v8" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+            <div id="v9" class="col-xs-4 col-lg-4 h-450 p-0"></div>
+          </div>
+        </div>
+      </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/ion-sdk-js@1.5.5/dist/ion-sdk.min.js"></script>
+    <script src="https://unpkg.com/ion-sdk-js@1.5.5/dist/json-rpc.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js'></script>
+    <script src="socket.io.min.js"></script>
+    <script>
+      //const socket = io("http://localhost:8081");
+      // socket.on("connect", () => {});
+
+    
+      const socket = io.connect("https://connect.ut.ac.ir/", 
+    { transports: ['websocket'],
+    secure:true,
+    reconnect: true,
+    rejectUnauthorized : false }
+    )
+      socket.on("connect", () => {
+        
+      });
+
+
+
+      
+    </script>
+    <script>
+      function getUrlVars() {
+        var vars = [],
+          hash;
+        var hashes = window.location.href
+          .slice(window.location.href.indexOf("?") + 1)
+          .split("&");
+        for (var i = 0; i < hashes.length; i++) {
+          hash = hashes[i].split("=");
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+        }
+        return vars;
+      }
+      console.log(getUrlVars()["display"]);
+    </script>
+    <script>
+      const localVideo = document.getElementById("local-video");
+      const remotesDiv = document.getElementById("remotes");
+
+      const serverUrl = "wss://sync.ut.ac.ir:7000/ws";
+
+      /* eslint-env browser */
+      const joinBtns = document.getElementById("start-btns");
+
+      var placedVideos = {}
+
+      const config = {
+        iceServers: [
+          {url: "stun:stun.l.google.com:19302"},
+          {
+            url: "turn:sync.ut.ac.ir:3478",
+            credential: 'ion',
+            username: 'pion'
+        
+          }
+        ]
+      };
+      const streams = {};
+
+
+      const signalLocal = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal = new IonSDK.Client(signalLocal, config);
+      signalLocal.onopen = () =>
+      clientLocal.join("screen room");
+      clientLocal.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      function lateStart(){
+        setTimeout(
+    function() {
+      screenStart()
+    }
+    .bind(this),
+    7000
+);
+      }
+
+      function screenStart() {
+  var self = this;
+  IonSDK.LocalStream.getDisplayMedia({
+    resolution: "vga",
+    frameRate: 15,
+    audio: false,
+  })
+    .then((media) => {
+      console.log(media);
+      //this.setState({ screenMedia: media, screenActive: true });
+      var localVideo = document.createElement("video");
+      localVideo.srcObject = media;
+      localVideo.autoplay = true;
+      localVideo.muted = true;
+      localVideo.width = '320';
+      clientLocal.publish(media);
+      handleTrack(media.getVideoTracks()[0], media)
+      media.getVideoTracks()[0].onended = function () {
+        //self.screenUnPublish();
+      };
+      
+    })
+    .catch(console.error);
+}
+
+
+
+
+      function handleTrack(track, stream) {
+        if(track && stream) {
+        console.log("got track", track.id, "for stream", stream.id);
+        track.onunmute = () => {
+          if (!streams[stream.id]) {
+            streams[stream.id] = stream
+            socket.emit('ionGetSlot', {stream: stream.id})
+            socket.on("ionSlot", (m) => {
+              console.log('slot0', m)
+              if(!document.getElementById(m['stream'])) {
+                console.log('slot', m)
+                var stream = streams[m['stream']]
+                remoteVideo = document.createElement("video");
+                remoteVideo.srcObject = stream;
+                remoteVideo.autoplay = true;
+                remoteVideo.width = "750";
+                remoteVideo.id = stream.id;
+                remoteVideo.muted = true;
+                $('#v'+m['slot'][1]).append(remoteVideo)
+                placedVideos[stream.id] = m['slot'][1]
+              }
+            });
+
+            stream.onremovetrack = () => {
+              console.log('Stream is gone ...')
+              try {
+                if (streams[stream.id]) {
+
+                  delete streams[stream.id];
+                  console.log(stream.id)
+                  var v = placedVideos[stream.id]
+                  console.log(v, placedVideos, stream.id )
+                  var videoEl = document.getElementById(stream.id);
+                  var videoDiv = document.getElementById('v'+v);
+                  videoDiv.removeChild(videoEl)
+                  socket.emit('ionRelSlot', {stream: stream.id})
+                }
+              } catch (err) {}
+            };
+          }
+        };
+      }
+      }
+
+
+
+
+    </script>
+
+
+
+
+    
+  </body>
+</html>
