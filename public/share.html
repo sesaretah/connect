@@ -26,6 +26,9 @@
       .p-0 {
         padding: 0px !important;
       }
+      .row {
+        margin: 0px !important;
+      }
     </style>
 
     <title>Share1</title>
@@ -39,15 +42,7 @@
 
         <div class="col-xs-12 col-lg-12 ">
           <div id='remotes' class="row">
-            <div id="v1" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v2" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v3" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v4" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v5" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v6" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v7" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v8" class="col-xs-3 col-lg-3 h-450 p-0"></div>
-            <div id="v9" class="col-xs-3 col-lg-3 h-450 p-0"></div>
+
           </div>
         </div>
       </div>
@@ -79,10 +74,10 @@
        lateStart();
 });
 
-   //   const socket = io("http://localhost:8081");
-    //  socket.on("connect", () => {});
+      const socket = io("http://localhost:8081");
+      socket.on("connect", () => {});
 
-    
+    /*
       const socket = io.connect("https://connect.ut.ac.ir/", 
     { transports: ['websocket'],
     secure:true,
@@ -92,7 +87,7 @@
       socket.on("connect", () => {
         
       });
-
+*/
 
 
       
@@ -149,7 +144,7 @@
       function lateStart(){
         setTimeout(
     function() {
-      screenStart()
+      //screenStart()
     }
     .bind(this),
     7000
@@ -218,7 +213,7 @@
       const signalLocal25 = new Signal.IonSFUJSONRPCSignal(serverUrl);
       const clientLocal25 = new IonSDK.Client(signalLocal25, config);
       signalLocal25.onopen = () =>
-      clientLocal25.join("room25");
+      clientLocal25.join("room63");
       clientLocal25.ontrack = (track, stream) => {
         handleTrack(track, stream)
       };
@@ -247,13 +242,20 @@
                 console.log('slot', m)
                 var stream = streams[m['stream']]
                 remoteVideo = document.createElement("video");
-                //div = document.createElement("<div id='d"+stream.id+"' class='col-xs-3 col-lg-3 h-450 p-0'></div>")
+                div = document.createElement("div")
+                div.setAttribute("id", "d-"+stream.id);
+                div.classList.add('col-xs-2')
+                div.classList.add('col-lg-2')
+                div.classList.add('h-450')
+                div.classList.add('p-0')
+                $('#remotes').append(div)
+                
                 remoteVideo.srcObject = stream;
                 remoteVideo.autoplay = true;
                 remoteVideo.width = "750";
                 remoteVideo.id = stream.id;
                 remoteVideo.muted = true;
-                $('#v'+m['slot'][1]).append(remoteVideo)
+                $('#d-'+stream.id).append(remoteVideo)
                 placedVideos[stream.id] = m['slot'][1]
               }
             });
