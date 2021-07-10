@@ -240,15 +240,16 @@
                 remoteVideo = document.createElement("video");
                 div = document.createElement("div")
                 div.setAttribute("id", "d-"+stream.id);
-                if (streams.length < 7) {
+                var size = Object.keys(streams).length
+                if (size < 7) {
                   div.classList.add('col-lg-4')
                 }
 
-                if (streams.length > 7 && streams.length < 13) {
+                if (size > 7 && size < 13) {
                   div.classList.add('col-lg-3')
                 }
 
-                if (streams.length > 13 ) {
+                if (size > 13 ) {
                   div.classList.add('col-lg-2')
                 }
                 
