@@ -240,7 +240,18 @@
                 remoteVideo = document.createElement("video");
                 div = document.createElement("div")
                 div.setAttribute("id", "d-"+stream.id);
-                div.classList.add('col')
+                if (streams.length < 7) {
+                  div.classList.add('col-lg-4')
+                }
+
+                if (streams.length > 7 && streams.length < 13) {
+                  div.classList.add('col-lg-3')
+                }
+
+                if (streams.length > 13 ) {
+                  div.classList.add('col-lg-2')
+                }
+                
                 //div.classList.add('col-xs-2')
                 //div.classList.add('col-lg-2')
                 //div.classList.add('h-450')
