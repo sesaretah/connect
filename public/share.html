@@ -38,12 +38,8 @@
 
     <div class="container-fluid">
 
-      <div class="row row-offcanvas row-offcanvas-right">
+      <div id='remotes' class="row row-offcanvas row-offcanvas-right">
 
-        <div class="col-xs-12 col-lg-12 ">
-          <div id='remotes' class="row">
-
-          </div>
         </div>
       </div>
 
@@ -74,10 +70,10 @@
        lateStart();
 });
 
-      const socket = io("http://localhost:8081");
-      socket.on("connect", () => {});
+//      const socket = io("http://localhost:8081");
+ //     socket.on("connect", () => {});
 
-    /*
+    
       const socket = io.connect("https://connect.ut.ac.ir/", 
     { transports: ['websocket'],
     secure:true,
@@ -87,7 +83,7 @@
       socket.on("connect", () => {
         
       });
-*/
+
 
 
       
@@ -244,9 +240,10 @@
                 remoteVideo = document.createElement("video");
                 div = document.createElement("div")
                 div.setAttribute("id", "d-"+stream.id);
-                div.classList.add('col-xs-2')
-                div.classList.add('col-lg-2')
-                div.classList.add('h-450')
+                div.classList.add('col')
+                //div.classList.add('col-xs-2')
+                //div.classList.add('col-lg-2')
+                //div.classList.add('h-450')
                 div.classList.add('p-0')
                 $('#remotes').append(div)
                 
