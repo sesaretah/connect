@@ -138,19 +138,11 @@
       const clientLocal = new IonSDK.Client(signalLocal, config);
       signalLocal.onopen = () =>
       clientLocal.join("room"+getUrlVars()["display"]+"1");
-      clientLocal.join("room"+getUrlVars()["display"]+"2");
-      clientLocal.join("room"+getUrlVars()["display"]+"3");
-      clientLocal.join("room"+getUrlVars()["display"]+"4");
-      clientLocal.join("room"+getUrlVars()["display"]+"5");
-      clientLocal.join("room"+getUrlVars()["display"]+"6");
-      clientLocal.join("room"+getUrlVars()["display"]+"7");
-      clientLocal.join("room"+getUrlVars()["display"]+"8");
-      clientLocal.join("room"+getUrlVars()["display"]+"9");
       clientLocal.ontrack = (track, stream) => {
         handleTrack(track, stream)
       };
 
-/*
+
       const signalLocal2 = new Signal.IonSFUJSONRPCSignal(serverUrl);
       const clientLocal2 = new IonSDK.Client(signalLocal2, config);
       signalLocal2.onopen = () =>
@@ -214,7 +206,7 @@
       clientLocal9.ontrack = (track, stream) => {
         handleTrack(track, stream)
       };
-*/
+
 
       function handleTrack(track, stream) {
         if(track && stream) {
