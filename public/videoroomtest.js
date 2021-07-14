@@ -731,6 +731,7 @@ console.log(id, display, audio, video);
 	  roomId = display.split("§")[display.split("§").length - 1]
 	  console.log(roomId, id)
 	  socket.emit('ionRelSlot', {slot: roomId, stream: id})
+
       //if (remoteFeed.spinner) remoteFeed.spinner.stop();
       //remoteFeed.spinner = null;
       //$("#remotevideo" + remoteFeed.rfindex).remove();
@@ -775,7 +776,9 @@ function streamAttacher(feed, display) {
 	  
 	}
 	if (feed.id && feed.webrtcStuff && feed.webrtcStuff.remoteStream) {
-		$("#v"+roomId[1]).append(localVideo);
+		$("#v"+roomId[1]).html();
+    $("#v"+roomId[1]).append(localVideo);
+    
 		Janus.attachMediaStream(
 			document.getElementById("video-" + feed.id),
 			feed.webrtcStuff.remoteStream
