@@ -164,44 +164,6 @@
 }
     </script>
     
-    
-    <script>
-      var items = 0
-      //var myVar = setInterval(addVideo, 4000);
-
-      function addVideo() {
-        items = items + 1
-        var id = Math.random().toString(36).substring(7)
-        $("#remotes").append("<div id='"+id+"' class='v'><video controls><source src=http://techslides.com/demos/sample-videos/small.webm type=video/webm></video></div>");
-        if (items < 7) {
-          $(".v").each(function() {
-            $(this).addClass('col-md-4')
-            $(this).addClass('hv-50')
-        })
-        }
-        if (items > 6 && items < 17) {
-          $(".v").each(function() {
-            $(this).removeClass('col-md-4')
-            $(this).removeClass('hv-50')
-            $(this).addClass('col-md-3')
-            $(this).addClass('hv-25')
-        })
-        }
-
-        if (items > 16 &&  items < 37) {
-          $(".v").each(function() {
-            $(this).removeClass('col-md-3')
-            $(this).removeClass('hv-25')
-            $(this).addClass('col-md-2')
-            $(this).addClass('hv-16')
-        })
-        }
-      }
-
-      function myStopFunction() {
-       // clearInterval(myVar);
-      }
-    </script>
 
 
 
