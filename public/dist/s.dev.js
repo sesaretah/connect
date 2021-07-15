@@ -58,6 +58,7 @@ var mystream = null; // We use this other ID just to map our subscriptions to us
 var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
+var streams = [];
 var doSimulcast = getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true";
 var doSimulcast2 = getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true";
 var acodec = getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null;
@@ -550,7 +551,8 @@ function newRemoteFeed(id, display, audio, video) {
     onlocalstream: function onlocalstream(stream) {// The subscriber stream is recvonly, we don't expect anything here
     },
     onremotestream: function onremotestream(stream) {
-      streamAttacher(remoteFeed, display); //console.log('^^^^^^^^^^^^^', remoteFeed)
+      streamAttacher(remoteFeed, display);
+      streams.push(remoteFeed.id); //console.log('^^^^^^^^^^^^^', remoteFeed)
       //console.log("Remote feed #" + remoteFeed.rfindex + ", stream:", stream);
 
       /*
@@ -613,9 +615,13 @@ function newRemoteFeed(id, display, audio, video) {
       Janus.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
       roomId = display.split("§")[display.split("§").length - 1];
       console.log(roomId, id);
+      $("#video-" + id).remove();
       socket.emit('ionRelSlot', {
         slot: roomId,
         stream: id
+      });
+      streams = streams.filter(function (item) {
+        return item !== id;
       }); //if (remoteFeed.spinner) remoteFeed.spinner.stop();
       //remoteFeed.spinner = null;
       //$("#remotevideo" + remoteFeed.rfindex).remove();
@@ -660,11 +666,39 @@ function streamAttacher(feed, display) {
 
   if (feed.id && feed.webrtcStuff && feed.webrtcStuff.remoteStream) {
     //$("#v"+roomId[1]).html();
-    $("#v" + roomId[1]).prepend(localVideo);
+    $("#remotes").append("<div id='" + feed.id + "' class='v'></div>");
+    $("#" + feed.id).prepend(localVideo);
+    placeVideo();
     Janus.attachMediaStream(document.getElementById("video-" + feed.id), feed.webrtcStuff.remoteStream);
   }
+}
 
-  if (feed.id && feed.webrtcStuff && feed.webrtcStuff.myStream) {
-    Janus.attachMediaStream(document.getElementById("video-" + feed.id), feed.webrtcStuff.myStream);
+function placeVideo() {
+  items = streams.length;
+  var id = Math.random().toString(36).substring(7);
+
+  if (items < 7) {
+    $(".v").each(function () {
+      $(this).addClass('col-md-4');
+      $(this).addClass('hv-50');
+    });
+  }
+
+  if (items > 6 && items < 17) {
+    $(".v").each(function () {
+      $(this).removeClass('col-md-4');
+      $(this).removeClass('hv-50');
+      $(this).addClass('col-md-3');
+      $(this).addClass('hv-25');
+    });
+  }
+
+  if (items > 16 && items < 37) {
+    $(".v").each(function () {
+      $(this).removeClass('col-md-3');
+      $(this).removeClass('hv-25');
+      $(this).addClass('col-md-2');
+      $(this).addClass('hv-16');
+    });
   }
 }

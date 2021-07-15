@@ -438,9 +438,9 @@ function registerUsername() {
     request: "join",
     room: myroom,
     ptype: "publisher",
-    display: "displayx",
+    display: "display"+getUrlVars()["display"],
   };
-  myusername = "displayx";
+  myusername = "display"+getUrlVars()["display"];
   sfutest.send({ message: register });
 }
 

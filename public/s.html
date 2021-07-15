@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap.min.css" >
+
+    <style>
+      #remotes video {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        background-color: black;
+      }
+      .hv-50 {
+        height: 50vh;
+      }
+      .hv-25 {
+        height: 25vh;
+      }
+      .hv-16 {
+        height: 16vh;
+      }
+      .p-0 {
+        padding: 0px !important;
+      }
+    </style>
+
+    <title>Pion ion-sfu | Pubsubtest</title>
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-lg-12 ">
+          <div id='remotes' class="row">
+
+          </div>
+        </div>
+      </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="jquery-3.5.1.slim.min.js"></script>
+    <script
+      src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js'></script>
+    <script src="socket.io.min.js"></script>
+    <script src="adapter.js"></script>
+    <script src="janus.js"></script>
+    <script src="s.js"></script>
+
+    <script>
+      //const socket = io("http://localhost:8081");
+      // socket.on("connect", () => {});
+
+    
+      const socket = io.connect("https://connect.ut.ac.ir/", 
+    { transports: ['websocket'],
+    secure:true,
+    reconnect: true,
+    rejectUnauthorized : false }
+    )
+      socket.on("connect", () => {
+        
+      });
+
+
+
+      
+    </script>
+    <script>
+      function getUrlVars() {
+        var vars = [],
+          hash;
+        var hashes = window.location.href
+          .slice(window.location.href.indexOf("?") + 1)
+          .split("&");
+        for (var i = 0; i < hashes.length; i++) {
+          hash = hashes[i].split("=");
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+        }
+        return vars;
+      }
+      console.log(getUrlVars()["display"]);
+
+      const serverUrl = "wss://sync.ut.ac.ir:7000/ws";
+
+      /* eslint-env browser */
+      const joinBtns = document.getElementById("start-btns");
+
+      var placedVideos = {}
+
+      const config = {
+        iceServers: [
+          {url: "stun:stun.l.google.com:19302"},
+          {
+            url: "turn:sync1.ut.ac.ir:3478",
+            username: 'shafiei',
+            credential: '12345678',
+            
+        
+          }
+        ]
+      };
+      const streams = {};
+
+
+      const signalLocal0 = new Signal.IonSFUJSONRPCSignal(serverUrl);
+      const clientLocal0 = new IonSDK.Client(signalLocal0, config);
+      signalLocal0.onopen = () =>
+      clientLocal0.join("screen room");
+      clientLocal0.ontrack = (track, stream) => {
+        handleTrack(track, stream)
+      };
+
+      function lateStart(){
+        setTimeout(
+    function() {
+      screenStart()
+    }
+    .bind(this),
+    5000
+);
+      }
+
+      function screenStart() {
+  var self = this;
+  IonSDK.LocalStream.getDisplayMedia({
+    //resolution: "720p",
+    frameRate: 35,
+    audio: false,
+  })
+    .then((media) => {
+      console.log(media);
+      //this.setState({ screenMedia: media, screenActive: true });
+      var localVideo = document.createElement("video");
+      localVideo.srcObject = media;
+      localVideo.autoplay = true;
+      localVideo.muted = true;
+      localVideo.width = '320';
+      clientLocal0.publish(media);
+      handleTrack(media.getVideoTracks()[0], media)
+      media.getVideoTracks()[0].onended = function () {
+        //self.screenUnPublish();
+      };
+      
+    })
+    .catch(console.error);
+}
+    </script>
+    
+    
+    <script>
+      var items = 0
+      //var myVar = setInterval(addVideo, 4000);
+
+      function addVideo() {
+        items = items + 1
+        var id = Math.random().toString(36).substring(7)
+        $("#remotes").append("<div id='"+id+"' class='v'><video controls><source src=http://techslides.com/demos/sample-videos/small.webm type=video/webm></video></div>");
+        if (items < 7) {
+          $(".v").each(function() {
+            $(this).addClass('col-md-4')
+            $(this).addClass('hv-50')
+        })
+        }
+        if (items > 6 && items < 17) {
+          $(".v").each(function() {
+            $(this).removeClass('col-md-4')
+            $(this).removeClass('hv-50')
+            $(this).addClass('col-md-3')
+            $(this).addClass('hv-25')
+        })
+        }
+
+        if (items > 16 &&  items < 37) {
+          $(".v").each(function() {
+            $(this).removeClass('col-md-3')
+            $(this).removeClass('hv-25')
+            $(this).addClass('col-md-2')
+            $(this).addClass('hv-16')
+        })
+        }
+      }
+
+      function myStopFunction() {
+       // clearInterval(myVar);
+      }
+    </script>
+
+
+
+
+    
+  </body>
+</html>
