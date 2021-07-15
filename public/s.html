@@ -18,6 +18,7 @@
       }
       body {
         background-color: #5d5d5f;
+        overflow: hidden !important;
       }
       .hv-50 {
         height: 50vh;
@@ -165,7 +166,9 @@
     codec: 'VP8',
     frameRate: 25,
     audio: false,
-    resolution: 'hd'
+    resolution: 'hd',
+    width: 600,
+    height: 337,
   })
     .then((media) => {
       console.log(media);
