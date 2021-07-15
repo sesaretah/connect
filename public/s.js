@@ -804,24 +804,24 @@ function placeVideo() {
   var id = Math.random().toString(36).substring(7)
   if (items < 7) {
     $(".v").each(function() {
-      $(this).addClass('col-md-4')
+      $(this).addClass('col-sx-4')
       $(this).addClass('hv-50')
   })
   }
   if (items > 6 && items < 17) {
     $(".v").each(function() {
-      $(this).removeClass('col-md-4')
+      $(this).removeClass('col-sx-4')
       $(this).removeClass('hv-50')
-      $(this).addClass('col-md-3')
+      $(this).addClass('col-sx-3')
       $(this).addClass('hv-25')
   })
   }
 
   if (items > 16 &&  items < 37) {
     $(".v").each(function() {
-      $(this).removeClass('col-md-3')
+      $(this).removeClass('col-sx-3')
       $(this).removeClass('hv-25')
-      $(this).addClass('col-md-2')
+      $(this).addClass('col-sx-2')
       $(this).addClass('hv-16')
   })
   }
