@@ -64,9 +64,7 @@
     <script src="s.js"></script>
 
     <script>
-            $( document ).ready(function() {
-       lateStart();
-});
+
       //const socket = io("http://localhost:8081");
       // socket.on("connect", () => {});
 
@@ -140,6 +138,10 @@
     5000
 );
       }
+
+      $( document ).ready(function() {
+       lateStart();
+});
 
       function screenStart() {
   var self = this;
