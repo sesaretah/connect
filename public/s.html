@@ -159,8 +159,10 @@
   var self = this;
   IonSDK.LocalStream.getDisplayMedia({
     //resolution: "720p",
-    frameRate: 35,
+    codec: 'VP8',
+    frameRate: 25,
     audio: false,
+    resolution: 'hd'
   })
     .then((media) => {
       console.log(media);
