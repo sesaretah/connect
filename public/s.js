@@ -440,9 +440,9 @@ function registerUsername() {
     request: "join",
     room: myroom,
     ptype: "publisher",
-    display: "display"+getUrlVars()["display"],
+    display: "broadcaster",
   };
-  myusername = "display"+getUrlVars()["display"];
+  myusername = "broadcaster";
   sfutest.send({ message: register });
 }
 
@@ -556,10 +556,10 @@ console.log(id, display, audio, video);
         subscribe["offer_video"] = false;
       }
       remoteFeed.videoCodec = video;
-	  roomId = display.split("§")[display.split("§").length - 1]
-	  if(getUrlVars()["display"] === roomId[0]) {
+	 // roomId = display.split("§")[display.split("§").length - 1]
+	 // if(getUrlVars()["display"] === roomId[0]) {
 		remoteFeed.send({ message: subscribe });
-	  }
+	  //}
       
     },
     error: function (error) {
