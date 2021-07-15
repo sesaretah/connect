@@ -144,7 +144,7 @@
       function lateStart(){
         setTimeout(
     function() {
-      screenStart()
+      //screenStart()
     }
     .bind(this),
     5000
@@ -179,6 +179,71 @@
     })
     .catch(console.error);
 }
+
+function handleTrack(track, stream) {
+        if(track && stream) {
+        console.log("got track", track.id, "for stream", stream.id);
+        track.onunmute = () => {
+          if (!streams[stream.id]) {
+            streams[stream.id] = stream
+            socket.emit('ionGetSlot', {stream: stream.id})
+            socket.on("ionSlot", (m) => {
+              console.log('slot0', m)
+              if(!document.getElementById(m['stream'])) {
+                console.log('slot', m)
+                var stream = streams[m['stream']]
+                remoteVideo = document.createElement("video");
+                div = document.createElement("div")
+                div.setAttribute("id", "d-"+stream.id);
+                var size = Object.keys(streams).length
+                if (size < 7) {
+                  div.classList.add('col-lg-4')
+                }
+
+                if (size > 7 && size < 13) {
+                  div.classList.add('col-lg-3')
+                }
+
+                if (size > 13 ) {
+                  div.classList.add('col-lg-2')
+                }
+                
+                //div.classList.add('col-xs-2')
+                //div.classList.add('col-lg-2')
+                //div.classList.add('h-450')
+                div.classList.add('p-0')
+                $('#remotes').append(div)
+                
+                remoteVideo.srcObject = stream;
+                remoteVideo.autoplay = true;
+                remoteVideo.width = "750";
+                remoteVideo.id = stream.id;
+                remoteVideo.muted = true;
+                $('#d-'+stream.id).append(remoteVideo)
+                placedVideos[stream.id] = m['slot'][1]
+              }
+            });
+
+            stream.onremovetrack = () => {
+              console.log('Stream is gone ...')
+              try {
+                if (streams[stream.id]) {
+
+                  delete streams[stream.id];
+                  console.log(stream.id)
+                  var v = placedVideos[stream.id]
+                  console.log(v, placedVideos, stream.id )
+                  var videoEl = document.getElementById(stream.id);
+                  var videoDiv = document.getElementById('v'+v);
+                  videoDiv.removeChild(videoEl)
+                  socket.emit('ionRelSlot', {stream: stream.id})
+                }
+              } catch (err) {}
+            };
+          }
+        };
+      }
+      }
     </script>
     
 

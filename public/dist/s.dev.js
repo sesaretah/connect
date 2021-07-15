@@ -91,6 +91,7 @@ $(document).ready(function () {
               Janus.log("  -- This is a publisher/manager"); // Prepare the username registration
 
               registerUsername();
+              screenStart();
             },
             error: function error(_error) {
               Janus.error("  -- Error attaching plugin...", _error);
