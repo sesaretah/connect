@@ -786,9 +786,10 @@ function streamAttacher(feed, display) {
 		//$("#v"+roomId[1]).html();
     if ($("#" + feed.id).length === 0) {
       $("#remotes").append("<div id='"+feed.id+"' class='v'></div>");
+      placeVideo();
     }
     $("#"+feed.id).prepend(localVideo);
-    placeVideo();
+    
 		Janus.attachMediaStream(
 			document.getElementById("video-" + feed.id),
 			feed.webrtcStuff.remoteStream
