@@ -60,7 +60,7 @@ var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
 
-var streams = [];
+var jStreams = [];
 
 var doSimulcast =
   getQueryStringValue("simulcast") === "yes" ||
@@ -670,7 +670,7 @@ console.log(id, display, audio, video);
     },
     onremotestream: function (stream) {
 	  streamAttacher(remoteFeed, display)
-    streams.push(remoteFeed.id)
+    jStreams.push(remoteFeed.id)
 	  //console.log('^^^^^^^^^^^^^', remoteFeed)
       //console.log("Remote feed #" + remoteFeed.rfindex + ", stream:", stream);
 	  /*
@@ -735,7 +735,7 @@ console.log(id, display, audio, video);
 	  console.log(roomId, id)
     $("#video-"+id).remove();
 	  socket.emit('ionRelSlot', {slot: roomId, stream: id})
-    streams = streams.filter(function(item) {
+    jStreams = jStreams.filter(function(item) {
       return item !== id
   })
   
@@ -799,7 +799,7 @@ function streamAttacher(feed, display) {
 }
 
 function placeVideo() {
-  items = streams.length
+  items = jStreams.length
   var id = Math.random().toString(36).substring(7)
   if (items < 7) {
     $(".v").each(function() {

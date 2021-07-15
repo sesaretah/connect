@@ -58,7 +58,7 @@ var mystream = null; // We use this other ID just to map our subscriptions to us
 var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
-var streams = [];
+var jStreams = [];
 var doSimulcast = getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true";
 var doSimulcast2 = getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true";
 var acodec = getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null;
@@ -550,7 +550,7 @@ function newRemoteFeed(id, display, audio, video) {
     },
     onremotestream: function onremotestream(stream) {
       streamAttacher(remoteFeed, display);
-      streams.push(remoteFeed.id); //console.log('^^^^^^^^^^^^^', remoteFeed)
+      jStreams.push(remoteFeed.id); //console.log('^^^^^^^^^^^^^', remoteFeed)
       //console.log("Remote feed #" + remoteFeed.rfindex + ", stream:", stream);
 
       /*
@@ -618,7 +618,7 @@ function newRemoteFeed(id, display, audio, video) {
         slot: roomId,
         stream: id
       });
-      streams = streams.filter(function (item) {
+      jStreams = jStreams.filter(function (item) {
         return item !== id;
       }); //if (remoteFeed.spinner) remoteFeed.spinner.stop();
       //remoteFeed.spinner = null;
@@ -675,7 +675,7 @@ function streamAttacher(feed, display) {
 }
 
 function placeVideo() {
-  items = streams.length;
+  items = jStreams.length;
   var id = Math.random().toString(36).substring(7);
 
   if (items < 7) {
